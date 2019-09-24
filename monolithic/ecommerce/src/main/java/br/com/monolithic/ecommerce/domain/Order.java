@@ -14,19 +14,19 @@ import java.time.Instant;
 @Setter
 @NoArgsConstructor
 @Document
-public class Order {
+public class Order extends AbstractDomain {
 
     @Id
     private String id;
     @NotBlank
     private String saleId;
-    private OrderStatusEnum status;
+    private OrderStatusEnum orderStatus;
     private Instant createdAt;
     private Instant updatedAt;
 
     public Order(String saleId) {
         this.saleId = saleId;
-        this.status = OrderStatusEnum.CREATED;
+        this.orderStatus = OrderStatusEnum.CREATED;
         this.createdAt = Instant.now();
     }
 }

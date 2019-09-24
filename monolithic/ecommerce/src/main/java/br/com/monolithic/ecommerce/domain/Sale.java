@@ -12,7 +12,7 @@ import javax.validation.constraints.NotBlank;
 @Setter
 @NoArgsConstructor
 @Document
-public class Sale {
+public class Sale extends AbstractDomain {
 
     @Id
     private String id;

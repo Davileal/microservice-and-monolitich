@@ -1,6 +1,7 @@
 package br.com.monolithic.ecommerce.web.rest;
 
 import br.com.monolithic.ecommerce.domain.User;
+import br.com.monolithic.ecommerce.enums.EntityStatusEnum;
 import br.com.monolithic.ecommerce.exception.CustomException;
 import br.com.monolithic.ecommerce.repository.UserRepository;
 import org.springframework.http.HttpStatus;
@@ -50,8 +51,8 @@ public class UserResource {
         if (!user.isPresent()) {
             throw new CustomException("User not found", Status.NOT_FOUND);
         }
-        repository.delete(user.get());
-        return new ResponseEntity<>(HttpStatus.OK);
+        user.get().setStatus(EntityStatusEnum.INACTIVE);
+        return new ResponseEntity<>(repository.save(user.get()), HttpStatus.OK);
     }
 
 }

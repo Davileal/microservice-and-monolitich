@@ -11,7 +11,7 @@ import javax.persistence.Id;
 @Setter
 @NoArgsConstructor
 @Document
-public class Product {
+public class Product extends AbstractDomain {
 
     @Id
     private String id;
