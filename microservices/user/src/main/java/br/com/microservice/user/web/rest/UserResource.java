@@ -1,6 +1,7 @@
 package br.com.microservice.user.web.rest;
 
 import br.com.microservice.user.domain.User;
+import br.com.microservice.user.enums.EntityStatusEnum;
 import br.com.microservice.user.exception.CustomException;
 import br.com.microservice.user.repository.UserRepository;
 import org.springframework.http.HttpStatus;
@@ -50,8 +51,8 @@ public class UserResource {
         if (!user.isPresent()) {
             throw new CustomException("User not found", Status.NOT_FOUND);
         }
-        repository.delete(user.get());
-        return new ResponseEntity<>(HttpStatus.OK);
+        user.get().setStatus(EntityStatusEnum.INACTIVE);
+        return new ResponseEntity<>(repository.save(user.get()), HttpStatus.OK);
     }
 
 }

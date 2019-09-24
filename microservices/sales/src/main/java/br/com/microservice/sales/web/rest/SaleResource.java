@@ -1,6 +1,7 @@
 package br.com.microservice.sales.web.rest;
 
 import br.com.microservice.sales.domain.Sale;
+import br.com.microservice.sales.enums.EntityStatusEnum;
 import br.com.microservice.sales.exception.CustomException;
 import br.com.microservice.sales.repository.SaleRepository;
 import org.springframework.http.HttpStatus;
@@ -50,8 +51,8 @@ public class SaleResource {
         if (!sale.isPresent()) {
             throw new CustomException("Sale not found", Status.NOT_FOUND);
         }
-        repository.delete(sale.get());
-        return new ResponseEntity<>(HttpStatus.OK);
+        sale.get().setStatus(EntityStatusEnum.INACTIVE);
+        return new ResponseEntity<>(repository.save(sale.get()), HttpStatus.OK);
     }
 
 }

@@ -30,7 +30,7 @@ public class OrderScheduler {
         log.debug("Executing task");
         List<Order> createdOrders = repository.findByStatus(OrderStatusEnum.CREATED);
         for (Order order : createdOrders) {
-            order.setStatus(OrderStatusEnum.values()[new Random().nextInt(OrderStatusEnum.values().length)]);
+            order.setOrderStatus(OrderStatusEnum.values()[new Random().nextInt(OrderStatusEnum.values().length)]);
             order.setUpdatedAt(Instant.now());
             repository.save(order);
         }

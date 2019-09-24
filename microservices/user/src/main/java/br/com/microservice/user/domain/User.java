@@ -1,5 +1,6 @@
 package br.com.microservice.user.domain;
 
+import br.com.microservice.user.enums.EntityStatusEnum;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,6 +19,7 @@ public class User {
     private String id;
     @NotBlank
     private String name;
+    private EntityStatusEnum status = EntityStatusEnum.ACTIVE;
 
     public User(String id, @NotBlank String name) {
         this.id = id;

@@ -1,5 +1,6 @@
 package br.com.microservice.sales.domain;
 
+import br.com.microservice.sales.enums.EntityStatusEnum;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,6 +21,7 @@ public class Sale {
     private String productId;
     @NotBlank
     private String userId;
+    private EntityStatusEnum status = EntityStatusEnum.ACTIVE;
 
     public Sale(String productId, String userId) {
         this.productId = productId;

@@ -1,6 +1,7 @@
 package br.com.microservice.product.web.rest;
 
 import br.com.microservice.product.domain.Product;
+import br.com.microservice.product.enums.EntityStatusEnum;
 import br.com.microservice.product.exception.CustomException;
 import br.com.microservice.product.repository.ProductRepository;
 import org.springframework.http.HttpStatus;
@@ -50,8 +51,8 @@ public class ProductResource {
         if (!product.isPresent()) {
             throw new CustomException("Product not found", Status.NOT_FOUND);
         }
-        repository.delete(product.get());
-        return new ResponseEntity<>(HttpStatus.OK);
+        product.get().setStatus(EntityStatusEnum.INACTIVE);
+        return new ResponseEntity<>(repository.save(product.get()), HttpStatus.OK);
     }
 
 }

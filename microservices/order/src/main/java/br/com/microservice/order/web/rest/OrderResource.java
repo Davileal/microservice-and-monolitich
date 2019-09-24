@@ -1,6 +1,7 @@
 package br.com.microservice.order.web.rest;
 
 import br.com.microservice.order.domain.Order;
+import br.com.microservice.order.enums.EntityStatusEnum;
 import br.com.microservice.order.enums.OrderStatusEnum;
 import br.com.microservice.order.exception.CustomException;
 import br.com.microservice.order.repository.OrderRepository;
@@ -38,7 +39,7 @@ public class OrderResource {
 
     @PostMapping
     public ResponseEntity save(@RequestBody Order order) {
-        order.setStatus(OrderStatusEnum.CREATED);
+        order.setOrderStatus(OrderStatusEnum.CREATED);
         order.setCreatedAt(Instant.now());
         return new ResponseEntity<>(repository.save(order), HttpStatus.OK);
     }
@@ -54,8 +55,8 @@ public class OrderResource {
         if (!order.isPresent()) {
             throw new CustomException("Order not found", Status.NOT_FOUND);
         }
-        repository.delete(order.get());
-        return new ResponseEntity<>(HttpStatus.OK);
+        order.get().setStatus(EntityStatusEnum.INACTIVE);
+        return new ResponseEntity<>(repository.save(order.get()), HttpStatus.OK);
     }
 
 }

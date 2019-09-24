@@ -1,5 +1,6 @@
 package br.com.microservice.order.domain;
 
+import br.com.microservice.order.enums.EntityStatusEnum;
 import br.com.microservice.order.enums.OrderStatusEnum;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,13 +21,14 @@ public class Order {
     private String id;
     @NotBlank
     private String saleId;
-    private OrderStatusEnum status;
+    private OrderStatusEnum orderStatus;
     private Instant createdAt;
     private Instant updatedAt;
+    private EntityStatusEnum status = EntityStatusEnum.ACTIVE;
 
     public Order(String saleId) {
         this.saleId = saleId;
-        this.status = OrderStatusEnum.CREATED;
+        this.orderStatus = OrderStatusEnum.CREATED;
         this.createdAt = Instant.now();
     }
 }
