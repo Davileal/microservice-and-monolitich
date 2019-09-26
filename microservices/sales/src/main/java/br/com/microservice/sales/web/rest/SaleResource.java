@@ -5,6 +5,8 @@ import br.com.microservice.sales.enums.EntityStatusEnum;
 import br.com.microservice.sales.exception.CustomException;
 import br.com.microservice.sales.repository.SaleRepository;
 import br.com.microservice.sales.web.rest.dto.OrderDTO;
+import br.com.microservice.sales.web.rest.dto.ProductDTO;
+import br.com.microservice.sales.web.rest.dto.UserDTO;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -17,6 +19,8 @@ import java.util.Optional;
 public class SaleResource {
 
     private static final String ORDER_SERVER_URL = "http://localhost:8080/order-service/api/orders";
+    private static final String USER_SERVER_URL = "http://localhost:8080/user-service/api/users/";
+    private static final String PRODUCT_SERVER_URL = "http://localhost:8080/product-service/api/products/";
     private SaleRepository repository;
     private RestTemplate restTemplate;
 
@@ -41,6 +45,8 @@ public class SaleResource {
 
     @PostMapping
     public ResponseEntity save(@RequestBody Sale sale) {
+        this.checkUserStatus(sale.getUserId());
+        this.checkProductStatus(sale.getProductId());
         sale = repository.save(sale);
         OrderDTO orderDTO = new OrderDTO(sale.getId());
         HttpEntity<OrderDTO> request = new HttpEntity<>(orderDTO, new HttpHeaders());
@@ -50,6 +56,8 @@ public class SaleResource {
 
     @PutMapping
     public ResponseEntity update(@RequestBody Sale sale) {
+        this.checkUserStatus(sale.getUserId());
+        this.checkProductStatus(sale.getProductId());
         return new ResponseEntity<>(repository.save(sale), HttpStatus.OK);
     }
 
@@ -61,6 +69,28 @@ public class SaleResource {
         }
         sale.get().setStatus(EntityStatusEnum.INACTIVE);
         return new ResponseEntity<>(repository.save(sale.get()), HttpStatus.OK);
+    }
+
+    private void checkUserStatus(String userId) {
+        ResponseEntity<UserDTO> response = this.restTemplate
+                .exchange(USER_SERVER_URL + userId, HttpMethod.GET, null, UserDTO.class);
+        if (response.getBody() == null) {
+            throw new CustomException("User not found", Status.BAD_REQUEST);
+        }
+        if (response.getBody().getStatus().equals("INACTIVE")) {
+            throw new CustomException("User is not active", Status.BAD_REQUEST);
+        }
+    }
+
+    private void checkProductStatus(String productId) {
+        ResponseEntity<ProductDTO> response = this.restTemplate
+                .exchange(PRODUCT_SERVER_URL + productId, HttpMethod.GET, null, ProductDTO.class);
+        if (response.getBody() == null) {
+            throw new CustomException("Product not found", Status.BAD_REQUEST);
+        }
+        if (response.getBody().getStatus().equals("INACTIVE")) {
+            throw new CustomException("Product is not active", Status.BAD_REQUEST);
+        }
     }
 
 }
