@@ -4,6 +4,8 @@ import br.com.monolithic.ecommerce.domain.Product;
 import br.com.monolithic.ecommerce.enums.EntityStatusEnum;
 import br.com.monolithic.ecommerce.exception.CustomException;
 import br.com.monolithic.ecommerce.repository.ProductRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,7 @@ import java.util.Optional;
 @RequestMapping("/api/products")
 public class ProductResource {
 
+    private Logger log = LoggerFactory.getLogger(ProductResource.class);
     private ProductRepository repository;
 
     public ProductResource(ProductRepository repository) {
@@ -23,6 +26,7 @@ public class ProductResource {
 
     @GetMapping
     public ResponseEntity findAll() {
+        log.info("Request to get all products");
         return new ResponseEntity<>(repository.findAll(), HttpStatus.OK);
     }
 
@@ -37,6 +41,7 @@ public class ProductResource {
 
     @PostMapping
     public ResponseEntity save(@RequestBody Product product) {
+        log.info("Request to save product {}", product);
         return new ResponseEntity<>(repository.save(product), HttpStatus.OK);
     }
 
