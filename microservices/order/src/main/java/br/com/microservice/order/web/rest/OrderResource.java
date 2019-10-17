@@ -5,7 +5,8 @@ import br.com.microservice.order.enums.EntityStatusEnum;
 import br.com.microservice.order.enums.OrderStatusEnum;
 import br.com.microservice.order.exception.CustomException;
 import br.com.microservice.order.repository.OrderRepository;
-import br.com.microservice.order.web.rest.dto.SaleDTO;
+import br.com.microservice.order.web.rest.dto.PaymentDTO;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,8 @@ import java.util.Optional;
 @RequestMapping("/api/orders")
 public class OrderResource {
 
-    private static final String SALE_SERVER_URL = "http://localhost:8083/api/sales/";
+    private static final String STOCK_SERVER_URL = "http://localhost:8084/api/stock/";
+    private static final String PAYMENT_SERVER_URL = "http://localhost:8083/api/payments";
     private OrderRepository repository;
     private RestTemplate restTemplate;
 
@@ -44,16 +46,14 @@ public class OrderResource {
     }
 
     @PostMapping
-    public ResponseEntity save(@RequestBody Order order) {
-        this.checkSaleStatus(order.getSaleId());
-        order.setOrderStatus(OrderStatusEnum.CREATED);
+    public ResponseEntity create(@RequestBody Order order) {
+        if (!this.isProductAvailability(order.getProductID())) {
+            return new ResponseEntity<>("This product is not available anymore", HttpStatus.OK);
+        }
+        repository.save(order);
+        this.doPayment(order.getId());
+        order.setOrderStatus(OrderStatusEnum.ACCEPTED);
         order.setCreatedAt(Instant.now());
-        return new ResponseEntity<>(repository.save(order), HttpStatus.OK);
-    }
-
-    @PutMapping
-    public ResponseEntity update(@RequestBody Order order) {
-        this.checkSaleStatus(order.getSaleId());
         return new ResponseEntity<>(repository.save(order), HttpStatus.OK);
     }
 
@@ -67,14 +67,22 @@ public class OrderResource {
         return new ResponseEntity<>(repository.save(order.get()), HttpStatus.OK);
     }
 
-    private void checkSaleStatus(String saleId) {
-        ResponseEntity<SaleDTO> response = this.restTemplate
-                .exchange(SALE_SERVER_URL + saleId, HttpMethod.GET, null, SaleDTO.class);
+    private boolean isProductAvailability(String productID) {
+        ResponseEntity<Boolean> response = this.restTemplate
+                .exchange(STOCK_SERVER_URL + "checkAvailability/" + productID, HttpMethod.GET, null,
+                        Boolean.class);
         if (response.getBody() == null) {
-            throw new CustomException("Sale not found", Status.BAD_REQUEST);
+            return false;
         }
-        if (response.getBody().getStatus().equals("INACTIVE")) {
-            throw new CustomException("Sale is not active", Status.BAD_REQUEST);
+        return response.getBody();
+    }
+
+    private void doPayment(String orderID) {
+        HttpEntity<PaymentDTO> request = new HttpEntity<>(new PaymentDTO(orderID));
+        ResponseEntity<PaymentDTO> response = this.restTemplate.exchange(PAYMENT_SERVER_URL, HttpMethod.POST, request,
+                PaymentDTO.class);
+        if (!response.getStatusCode().equals(HttpStatus.OK)) {
+            throw new CustomException("Error when processing the payment", Status.BAD_REQUEST);
         }
     }
 

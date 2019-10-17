@@ -20,8 +20,10 @@ public class Order extends AbstractDomain {
     private String id;
     @DBRef
     private Product product;
-    private OrderStatusEnum orderStatus;
+    private OrderStatusEnum orderStatus = OrderStatusEnum.CREATED;
     private Instant createdAt;
     private Instant updatedAt;
+
+
 
 }

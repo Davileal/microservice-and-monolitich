@@ -20,15 +20,14 @@ public class Order {
     @Id
     private String id;
     @NotBlank
-    private String saleId;
-    private OrderStatusEnum orderStatus;
+    private String productID;
+    private OrderStatusEnum orderStatus = OrderStatusEnum.CREATED;
     private Instant createdAt;
     private Instant updatedAt;
     private EntityStatusEnum status = EntityStatusEnum.ACTIVE;
 
-    public Order(String saleId) {
-        this.saleId = saleId;
-        this.orderStatus = OrderStatusEnum.CREATED;
+    public Order(String productID) {
+        this.productID = productID;
         this.createdAt = Instant.now();
     }
 }

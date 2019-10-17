@@ -7,7 +7,6 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Id;
-import javax.validation.constraints.NotBlank;
 
 @Getter
 @Setter
@@ -19,5 +18,9 @@ public class Payment extends AbstractDomain {
     private String id;
     @DBRef
     private Order order;
+
+    public Payment(Order order) {
+        this.order = order;
+    }
 
 }
