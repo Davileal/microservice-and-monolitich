@@ -3,6 +3,7 @@ package br.com.monolithic.ecommerce.domain;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Id;
@@ -12,15 +13,11 @@ import javax.validation.constraints.NotBlank;
 @Setter
 @NoArgsConstructor
 @Document
-public class User extends AbstractDomain {
+public class Payment extends AbstractDomain {
 
     @Id
     private String id;
-    @NotBlank
-    private String name;
+    @DBRef
+    private Order order;
 
-    public User(String id, @NotBlank String name) {
-        this.id = id;
-        this.name = name;
-    }
 }

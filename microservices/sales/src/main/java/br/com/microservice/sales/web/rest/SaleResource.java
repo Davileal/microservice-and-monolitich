@@ -18,9 +18,9 @@ import java.util.Optional;
 @RequestMapping("/api/sales")
 public class SaleResource {
 
-    private static final String ORDER_SERVER_URL = "http://localhost:8080/order-service/api/orders";
-    private static final String USER_SERVER_URL = "http://localhost:8080/user-service/api/users/";
-    private static final String PRODUCT_SERVER_URL = "http://localhost:8080/product-service/api/products/";
+    private static final String ORDER_SERVER_URL = "http://localhost:8082/api/orders";
+    private static final String USER_SERVER_URL = "http://localhost:8084/api/users/";
+    private static final String PRODUCT_SERVER_URL = "http://localhost:8081/api/products/";
     private SaleRepository repository;
     private RestTemplate restTemplate;
 

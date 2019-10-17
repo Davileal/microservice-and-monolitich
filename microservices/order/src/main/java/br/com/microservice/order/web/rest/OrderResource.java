@@ -20,7 +20,7 @@ import java.util.Optional;
 @RequestMapping("/api/orders")
 public class OrderResource {
 
-    private static final String SALE_SERVER_URL = "http://localhost:8080/sale-service/api/sales/";
+    private static final String SALE_SERVER_URL = "http://localhost:8083/api/sales/";
     private OrderRepository repository;
     private RestTemplate restTemplate;
 

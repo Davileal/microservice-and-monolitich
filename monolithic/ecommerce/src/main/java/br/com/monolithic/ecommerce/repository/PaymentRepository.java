@@ -1,10 +1,10 @@
 package br.com.monolithic.ecommerce.repository;
 
-import br.com.monolithic.ecommerce.domain.Sale;
+import br.com.monolithic.ecommerce.domain.Payment;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface SaleRepository extends MongoRepository<Sale, String> {
+public interface PaymentRepository extends MongoRepository<Payment, String> {
 
 }
