@@ -1,0 +1,67 @@
+version: '3'
+services:
+  # MONOLITHIC ARCHITECTURE
+  monolithic:
+    image: mherwig/alpine-java-mongo
+    volumes:
+      - "./build/ecommerce.war:/opt/ecommerce.war"
+    ports:
+      - 8100:8100
+      - 27017:27017
+    environment:
+      LANG: C.UTF-8
+      LC_ALL: C.UTF-8
+      LANGUAGE: C.UTF-8
+
+  # MICROSERVICES ARCHITECTURE
+  product:
+    image: mherwig/alpine-java-mongo
+    volumes:
+      - "./build/product.war:/opt/product.war"
+    ports:
+      - 8081:8081
+      - 28081:27017
+    environment:
+      LANG: C.UTF-8
+      LC_ALL: C.UTF-8
+      LANGUAGE: C.UTF-8
+
+  order:
+    image: mherwig/alpine-java-mongo
+    volumes:
+      - "./build/order.war:/opt/order.war"
+    ports:
+      - 8082:8082
+      - 28082:27017
+    environment:
+      LANG: C.UTF-8
+      LC_ALL: C.UTF-8
+      LANGUAGE: C.UTF-8
+
+  payment:
+    image: mherwig/alpine-java-mongo
+    volumes:
+      - "./build/payment.war:/opt/payment.war"
+    ports:
+      - 8083:8083
+      - 28083:27017
+    environment:
+      LANG: C.UTF-8
+      LC_ALL: C.UTF-8
+      LANGUAGE: C.UTF-8
+
+  stock:
+    image: mherwig/alpine-java-mongo
+    volumes:
+      - "./build/stock.war:/opt/stock.war"
+    ports:
+      - 8084:8084
+      - 28084:27017
+    environment:
+      LANG: C.UTF-8
+      LC_ALL: C.UTF-8
+      LANGUAGE: C.UTF-8
+
+
+
+

@@ -21,8 +21,8 @@ import java.util.Optional;
 @RequestMapping("/api/orders")
 public class OrderResource {
 
-    private static final String STOCK_SERVER_URL = "http://localhost:8084/api/stock/";
-    private static final String PAYMENT_SERVER_URL = "http://localhost:8083/api/payments";
+    private static final String STOCK_SERVER_URL = "http://stock:8084/api/stock/";
+    private static final String PAYMENT_SERVER_URL = "http://payment:8083/api/payments";
     private OrderRepository repository;
     private RestTemplate restTemplate;
 
