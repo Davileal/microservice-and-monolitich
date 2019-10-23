@@ -54,9 +54,6 @@ public class OrderResource {
         if (!product.isPresent()) {
             throw new CustomException("Product tot found", Status.BAD_REQUEST);
         }
-        if (!this.isProductAvailability()) {
-            return new ResponseEntity<>("This product is not available anymore", HttpStatus.OK);
-        }
         Order order = new Order();
         order.setProduct(product.get());
         repository.save(order);
@@ -75,10 +72,6 @@ public class OrderResource {
 
         order.get().setStatus(EntityStatusEnum.INACTIVE);
         return new ResponseEntity<>(repository.save(order.get()), HttpStatus.OK);
-    }
-
-    private boolean isProductAvailability() {
-        return new Random().nextBoolean();
     }
 
 }

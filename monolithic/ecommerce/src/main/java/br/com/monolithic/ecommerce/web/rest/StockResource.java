@@ -22,13 +22,7 @@ public class StockResource {
 
     @GetMapping("/{productId}")
     public ResponseEntity checkProductAvailability(@PathVariable String productId) {
-        boolean result = new Random().nextBoolean();
-        if (result) {
-            log.info("The product {} is available", productId);
-        } else {
-            log.info("The product {} is not available", productId);
-        }
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return new ResponseEntity<>(true, HttpStatus.OK);
     }
 
 }
